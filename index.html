@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman Kelulusan SDN 1 SERUNI MUMBUL</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0c3da3;
+            --secondary-color: #27ae60;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            max-width: 500px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: var(--primary-color);
+            padding: 30px;
+            color: white;
+        }
+
+        .logo-container img {
+            width: 100px;
+            height: auto;
+            border-radius: 10px;
+            background: white;
+            padding: 5px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .login-box label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .input-nisn {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .input-nisn:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn-cek {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .btn-cek:hover {
+            background: #092d7a;
+            transform: scale(1.02);
+        }
+
+        /* Result Area */
+        #result-area {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .status-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .name-display {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 24px;
+            font-weight: 800;
+            margin: 15px 0;
+            color: white;
+        }
+
+        .lulus { background: var(--secondary-color); box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); }
+
+        .score-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .score-box {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .score-label { font-size: 12px; color: #666; font-weight: bold; margin-bottom: 5px; }
+        .score-value { font-size: 20px; font-weight: bold; color: var(--primary-color); }
+        .score-desc { font-size: 12px; font-style: italic; }
+
+        .btn-reset {
+            margin-top: 25px;
+            background: none;
+            border: 1px solid #ccc;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo-container">
+            <img src="https://via.placeholder.com/150?text=LOGO+SD" alt="Logo SDN 1 Seruni Mumbul">
+        </div>
+        <h1>PENGUMUMAN KELULUSAN</h1>
+        <p>SD NEGERI 1 SERUNI MUMBUL<br>Tahun Pelajaran 2025/2026</p>
+    </div>
+
+    <div class="content">
+        <div id="login-box" class="login-box">
+            <label for="nisn">Masukkan Nomor NISN :</label>
+            <input type="number" id="nisn-input" class="input-nisn" placeholder="Contoh: 3136352448">
+            <button class="btn-cek" onclick="cekKelulusan()">LIHAT HASIL KELULUSAN</button>
+        </div>
+
+        <div id="result-area">
+            <p>Berdasarkan hasil Keputusan Sekolah:</p>
+            <div class="status-card">
+                <div id="res-nama" class="name-display">-</div>
+                <div id="res-nisn" style="font-size: 14px; color: #666;">NISN: -</div>
+                <div id="res-status" class="status-badge lulus">LULUS</div>
+                
+                <div class="score-container">
+                    <div class="score-box">
+                        <div class="score-label">MATEMATIKA</div>
+                        <div id="res-mtk" class="score-value">0</div>
+                        <div id="res-mtk-desc" class="score-desc">-</div>
+                    </div>
+                    <div class="score-box">
+                        <div class="score-label">B. INDONESIA</div>
+                        <div id="res-indo" class="score-value">0</div>
+                        <div id="res-indo-desc" class="score-desc">-</div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-reset" onclick="location.reload()">Kembali</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Database Siswa
+    const dataSiswa = [
+        {nisn: "3136352448", nama: "AKILA", mtk: "40.00", mtk_desc: "Memadai", indo: "50.00", indo_desc: "Memadai"},
+        {nisn: "3134167925", nama: "ANDI AQILA", mtk: "40.00", mtk_desc: "Memadai", indo: "53.33", indo_desc: "Memadai"},
+        {nisn: "3134625925", nama: "ANGGI NABILAH", mtk: "23.33", mtk_desc: "Kurang", indo: "86.67", indo_desc: "Baik"},
+        {nisn: "3138645618", nama: "AQIFA HALWA NAILA", mtk: "43.33", mtk_desc: "Memadai", indo: "36.67", indo_desc: "Kurang"},
+        {nisn: "0135131449", nama: "AQILA ZAHRANI", mtk: "36.67", mtk_desc: "Memadai", indo: "46.67", indo_desc: "Kurang"},
+        {nisn: "0135947614", nama: "BAIQ APRILIYANTI", mtk: "43.33", mtk_desc: "Memadai", indo: "60.00", indo_desc: "Memadai"},
+        {nisn: "0142319180", nama: "BAIQ ARIQA FATINA ARUMI", mtk: "36.67", mtk_desc: "Memadai", indo: "53.33", indo_desc: "Memadai"},
+        {nisn: "3131794827", nama: "BAIQ ZASKIA AULIA RAHMA", mtk: "46.67", mtk_desc: "Memadai", indo: "66.67", indo_desc: "Memadai"},
+        {nisn: "3146258509", nama: "BQ. YUMNA ALIFYA", mtk: "46.67", mtk_desc: "Memadai", indo: "50.00", indo_desc: "Memadai"},
+        {nisn: "0133758653", nama: "DANU ILMAN HIDAYAT", mtk: "56.67", mtk_desc: "Baik", indo: "66.67", indo_desc: "Memadai"},
+        {nisn: "3146775517", nama: "FANI AZHA MAURA", mtk: "43.33", mtk_desc: "Memadai", indo: "63.33", indo_desc: "Memadai"},
+        {nisn: "3137539262", nama: "GALUH ARTANU", mtk: "36.67", mtk_desc: "Memadai", indo: "46.67", indo_desc: "Kurang"},
+        {nisn: "0127484641", nama: "HAPASA MAHRENI", mtk: "40.00", mtk_desc: "Memadai", indo: "70.00", indo_desc: "Memadai"},
+        {nisn: "0121359022", nama: "INDANA FATINA", mtk: "43.33", mtk_desc: "Memadai", indo: "53.33", indo_desc: "Memadai"},
+        {nisn: "3137454082", nama: "JAIBAL SAZID INGGI", mtk: "43.33", mtk_desc: "Memadai", indo: "40.00", indo_desc: "Kurang"},
+        {nisn: "3139395466", nama: "LUSIANA SAPITRI", mtk: "26.67", mtk_desc: "Kurang", indo: "46.67", indo_desc: "Kurang"},
+        {nisn: "3141938510", nama: "M. KHAERUL AMAR", mtk: "36.67", mtk_desc: "Memadai", indo: "26.67", indo_desc: "Kurang"},
+        {nisn: "3143369270", nama: "M. ZHIKRULLAH", mtk: "40.00", mtk_desc: "Memadai", indo: "40.00", indo_desc: "Kurang"},
+        {nisn: "3143642778", nama: "MOH. ALPAROZI", mtk: "46.67", mtk_desc: "Memadai", indo: "60.00", indo_desc: "Memadai"},
+        {nisn: "3134167130", nama: "MUHAMAD RENALDI", mtk: "43.33", mtk_desc: "Memadai", indo: "83.33", indo_desc: "Baik"},
+        {nisn: "3147655046", nama: "MUNAWARAH", mtk: "16.67", mtk_desc: "Kurang", indo: "46.67", indo_desc: "Kurang"},
+        {nisn: "3142290467", nama: "NIAS KURNIASIH", mtk: "43.33", mtk_desc: "Memadai", indo: "50.00", indo_desc: "Memadai"},
+        {nisn: "3138509476", nama: "NOVAL KHAERUL IHWAN", mtk: "36.67", mtk_desc: "Memadai", indo: "46.67", indo_desc: "Kurang"},
+        {nisn: "0136915320", nama: "NUR SAKINAH", mtk: "36.67", mtk_desc: "Memadai", indo: "53.33", indo_desc: "Memadai"},
+        {nisn: "3142063767", nama: "NURUL AFSAH ANDINI", mtk: "33.33", mtk_desc: "Memadai", indo: "30.00", indo_desc: "Kurang"},
+        {nisn: "3130669930", nama: "RISKI BAYU MAULANA", mtk: "50.00", mtk_desc: "Memadai", indo: "70.00", indo_desc: "Memadai"},
+        {nisn: "0131767691", nama: "ZAKI ISWANDI", mtk: "26.67", mtk_desc: "Kurang", indo: "60.00", indo_desc: "Memadai"},
+        {nisn: "0135291738", nama: "ABIYYU AMMAR ISMAIL", mtk: "56.67", mtk_desc: "Baik", indo: "46.67", indo_desc: "Kurang"},
+        {nisn: "0131834409", nama: "AHZA DANIS", mtk: "30.00", mtk_desc: "Kurang", indo: "46.67", indo_desc: "Kurang"},
+        {nisn: "0139667266", nama: "ALIF AQILAL KUSMAYADI", mtk: "43.33", mtk_desc: "Memadai", indo: "46.67", indo_desc: "Kurang"},
+        {nisn: "3136154633", nama: "AQILA AZZAHRA", mtk: "26.67", mtk_desc: "Kurang", indo: "66.67", indo_desc: "Memadai"},
+        {nisn: "3143320202", nama: "AZRA MAULIDA", mtk: "40.00", mtk_desc: "Memadai", indo: "53.33", indo_desc: "Memadai"},
+        {nisn: "0149791085", nama: "BAIQ AISYAH PUTRI", mtk: "13.33", mtk_desc: "Kurang", indo: "30.00", indo_desc: "Kurang"},
+        {nisn: "0146724571", nama: "BAIQ APRILIYANI", mtk: "43.33", mtk_desc: "Memadai", indo: "40.00", indo_desc: "Kurang"},
+        {nisn: "3141668880", nama: "DHAIFI AZKAL HIMAMI", mtk: "33.33", mtk_desc: "Memadai", indo: "43.33", indo_desc: "Kurang"},
+        {nisn: "3137925058", nama: "DIKA PRAYUDHA", mtk: "30.00", mtk_desc: "Kurang", indo: "80.00", indo_desc: "Baik"},
+        {nisn: "3143354763", nama: "HABIB AKBAR ALFA REZA", mtk: "36.67", mtk_desc: "Memadai", indo: "43.33", indo_desc: "Kurang"},
+        {nisn: "3143176899", nama: "HAERUNISA", mtk: "36.67", mtk_desc: "Memadai", indo: "36.67", indo_desc: "Kurang"},
+        {nisn: "3130448933", nama: "HULWA KANZA RAMADANI BEG", mtk: "53.33", mtk_desc: "Memadai", indo: "33.33", indo_desc: "Kurang"},
+        {nisn: "3130244018", nama: "JIHAN RAUDATUL RAHMAN", mtk: "46.67", mtk_desc: "Memadai", indo: "50.00", indo_desc: "Memadai"},
+        {nisn: "0148608842", nama: "M. FARIS ZEIDAN", mtk: "63.33", mtk_desc: "Baik", indo: "56.67", indo_desc: "Memadai"},
+        {nisn: "0139150753", nama: "M.ABIZHAR FARABI", mtk: "40.00", mtk_desc: "Memadai", indo: "53.33", indo_desc: "Memadai"},
+        {nisn: "0137845092", nama: "MARSHA AYLA PUTRI", mtk: "50.00", mtk_desc: "Memadai", indo: "40.00", indo_desc: "Kurang"},
+        {nisn: "3146108221", nama: "MIRFAT ABIZAR", mtk: "50.00", mtk_desc: "Memadai", indo: "56.67", indo_desc: "Memadai"},
+        {nisn: "3136629246", nama: "MOH. JAKARIA BIN HASAN", mtk: "36.67", mtk_desc: "Memadai", indo: "76.67", indo_desc: "Baik"},
+        {nisn: "3131850571", nama: "NABIL FAIRUS", mtk: "30.00", mtk_desc: "Kurang", indo: "50.00", indo_desc: "Memadai"},
+        {nisn: "0135942555", nama: "NAJWA FIDDINA", mtk: "43.33", mtk_desc: "Memadai", indo: "70.00", indo_desc: "Memadai"},
+        {nisn: "3141673269", nama: "NISA ARDILA", mtk: "30.00", mtk_desc: "Kurang", indo: "40.00", indo_desc: "Kurang"},
+        {nisn: "0134829783", nama: "NURAN AZANI ADHA", mtk: "43.33", mtk_desc: "Memadai", indo: "70.00", indo_desc: "Memadai"},
+        {nisn: "3133993009", nama: "PUTRI KANZA OKTAFANI", mtk: "36.67", mtk_desc: "Memadai", indo: "50.00", indo_desc: "Memadai"},
+        {nisn: "3138324884", nama: "RAEFAL ANGGARAKSA", mtk: "40.00", mtk_desc: "Memadai", indo: "33.33", indo_desc: "Kurang"},
+        {nisn: "0137090150", nama: "RIDSAL PUTRA FIMAN PRATAMA", mtk: "56.67", mtk_desc: "Baik", indo: "73.33", indo_desc: "Memadai"},
+        {nisn: "3135585722", nama: "SUCI DARMA WANDA", mtk: "40.00", mtk_desc: "Memadai", indo: "70.00", indo_desc: "Memadai"},
+        {nisn: "0159444169", nama: "TAMA ARDIATMA", mtk: "66.67", mtk_desc: "Baik", indo: "56.67", indo_desc: "Memadai"},
+        {nisn: "0136312004", nama: "ZIO TANZILAL", mtk: "53.33", mtk_desc: "Memadai", indo: "76.67", indo_desc: "Baik"}
+    ];
+
+    function cekKelulusan() {
+        const input = document.getElementById('nisn-input').value;
+        const siswa = dataSiswa.find(s => s.nisn === input);
+
+        if (siswa) {
+            // Sembunyikan login, tampilkan hasil
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('result-area').style.display = 'block';
+
+            // Isi data
+            document.getElementById('res-nama').innerText = siswa.nama;
+            document.getElementById('res-nisn').innerText = "NISN: " + siswa.nisn;
+            document.getElementById('res-mtk').innerText = siswa.mtk;
+            document.getElementById('res-mtk-desc').innerText = "(" + siswa.mtk_desc + ")";
+            document.getElementById('res-indo').innerText = siswa.indo;
+            document.getElementById('res-indo-desc').innerText = "(" + siswa.indo_desc + ")";
+
+            // Jalankan kembang api
+            celebrate();
+        } else {
+            alert("Nomor NISN tidak ditemukan! Silakan cek kembali nomor Anda.");
+        }
+    }
+
+    function celebrate() {
+        var duration = 5 * 1000;
+        var end = Date.now() + duration;
+
+        (function frame() {
+            confetti({
+                particleCount: 3,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#0c3da3', '#27ae60', '#f1c40f']
+            });
+            confetti({
+                particleCount: 3,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#0c3da3', '#27ae60', '#f1c40f']
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
+    }
+</script>
+
+</body>
+</html>
